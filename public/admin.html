@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Emotion Labeling Task — Collected Data</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+  .wrap { max-width: 1000px; }
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  table.data-table th, table.data-table td { border-bottom: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+  table.data-table th { background: #f3f4f6; position: sticky; top: 0; }
+  .table-scroll { overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="page-header">
+    <h1>📊 Collected Labeling Data</h1>
+    <p>All (participant, tweet, label) submissions recorded by the task</p>
+  </header>
+
+  <div class="card">
+    <div class="toolbar">
+      <button class="btn-secondary" id="refresh-btn">Refresh</button>
+      <a href="/api/responses.csv"><button class="btn-secondary">Download CSV</button></a>
+      <a href="index.html"><button class="btn-primary">Back to task</button></a>
+    </div>
+    <div id="summary"></div>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Participant</th>
+            <th>Participant ID</th>
+            <th>Tweet</th>
+            <th>Label given</th>
+            <th>Ground truth</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

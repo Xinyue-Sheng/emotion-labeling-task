@@ -1,0 +1,240 @@
+:root {
+  --bg: #f7f7fb;
+  --card: #ffffff;
+  --ink: #1f2430;
+  --muted: #6b7280;
+  --accent: #4f46e5;
+  --accent-ink: #ffffff;
+  --border: #e5e7eb;
+  --anger: #ef4444;
+  --fear: #7c3aed;
+  --joy: #f59e0b;
+  --love: #ec4899;
+  --sadness: #3b82f6;
+  --surprise: #10b981;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+header.page-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+header.page-header h1 {
+  margin: 0 0 6px;
+  font-size: 1.6rem;
+}
+
+header.page-header p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+.card ul {
+  padding-left: 1.2rem;
+}
+
+.card ul li {
+  margin-bottom: 6px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 0.92rem;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 18px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px 20px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  width: 100%;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink);
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.25s ease;
+}
+
+.tweet-box {
+  background: #fafaff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 1.15rem;
+  margin-bottom: 24px;
+  min-height: 60px;
+}
+
+.emotion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+@media (min-width: 480px) {
+  .emotion-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.emotion-btn {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 8px;
+  font-size: 0.98rem;
+  text-transform: capitalize;
+  transition: all 0.15s ease;
+}
+
+.emotion-btn:hover { border-color: var(--accent); }
+
+.emotion-btn.selected {
+  color: #fff;
+  border-color: transparent;
+}
+
+.emotion-btn.selected[data-emotion="anger"] { background: var(--anger); }
+.emotion-btn.selected[data-emotion="fear"] { background: var(--fear); }
+.emotion-btn.selected[data-emotion="joy"] { background: var(--joy); }
+.emotion-btn.selected[data-emotion="love"] { background: var(--love); }
+.emotion-btn.selected[data-emotion="sadness"] { background: var(--sadness); }
+.emotion-btn.selected[data-emotion="surprise"] { background: var(--surprise); }
+
+.hidden { display: none !important; }
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.summary-table th, .summary-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tag {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.78rem;
+  text-transform: capitalize;
+}
+
+.tag[data-emotion="anger"] { background: var(--anger); }
+.tag[data-emotion="fear"] { background: var(--fear); }
+.tag[data-emotion="joy"] { background: var(--joy); }
+.tag[data-emotion="love"] { background: var(--love); }
+.tag[data-emotion="sadness"] { background: var(--sadness); }
+.tag[data-emotion="surprise"] { background: var(--surprise); }
+
+footer.note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 24px;
+}
+
+.error-msg {
+  color: #b91c1c;
+  font-size: 0.9rem;
+  margin-bottom: 14px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.stat-pill {
+  display: inline-block;
+  background: #eef2ff;
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin: 2px 4px 2px 0;
+}

@@ -1,0 +1,13 @@
+{
+  "name": "emotion-labeling-task",
+  "version": "1.0.0",
+  "description": "A1-2: Web interface for labeling tweets from the dair-ai/emotion dataset with basic emotions.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

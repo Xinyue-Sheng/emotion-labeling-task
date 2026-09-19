@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Emotion Labeling Task</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="wrap">
+  <header class="page-header">
+    <h1>🏷️ Tweet Emotion Labeling Task</h1>
+    <p>A short annotation task &middot; ~3 minutes</p>
+  </header>
+
+  <!-- ============ SCREEN 1: Welcome / Instructions ============ -->
+  <section id="screen-welcome" class="card">
+    <h2>What you'll do</h2>
+    <p>
+      You will read <strong>5 short tweets</strong> and, for each one, choose the emotion you think the
+      author was expressing. Every participant is shown a different, randomly chosen set of 5 tweets
+      drawn from a pool of 120 tweets taken from the public
+      <a href="https://huggingface.co/datasets/dair-ai/emotion" target="_blank" rel="noopener">dair-ai/emotion</a>
+      dataset.
+    </p>
+    <ul>
+      <li>For each tweet, pick exactly <strong>one</strong> of six emotion categories: anger, fear, joy, love, sadness, or surprise.</li>
+      <li>Go with your first instinct &mdash; there are no trick questions and no "correct" answer we're looking for.</li>
+      <li>Your responses are recorded along with your name/ID and a timestamp, purely for this class assignment.</li>
+      <li>The task takes about 2&ndash;3 minutes.</li>
+    </ul>
+    <div id="dataset-stats"></div>
+
+    <label for="participant-name">Your name or ID (used only to record your submissions)</label>
+    <input type="text" id="participant-name" placeholder="e.g. Jane Doe or Prolific ID" autocomplete="off" />
+    <div id="welcome-error" class="error-msg hidden"></div>
+    <button class="btn-primary" id="start-btn">Start labeling &rarr;</button>
+  </section>
+
+  <!-- ============ SCREEN 2: Labeling ============ -->
+  <section id="screen-label" class="card hidden">
+    <div class="progress">
+      <span id="progress-label">Tweet 1 of 5</span>
+      <span id="participant-tag"></span>
+    </div>
+    <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div></div>
+
+    <p style="color: var(--muted); margin-top: 0;">Which emotion is this tweet expressing?</p>
+    <div class="tweet-box" id="tweet-text">Loading tweet…</div>
+
+    <div class="emotion-grid" id="emotion-grid">
+      <button class="emotion-btn" data-emotion="anger">😠 Anger</button>
+      <button class="emotion-btn" data-emotion="fear">😨 Fear</button>
+      <button class="emotion-btn" data-emotion="joy">😄 Joy</button>
+      <button class="emotion-btn" data-emotion="love">❤️ Love</button>
+      <button class="emotion-btn" data-emotion="sadness">😢 Sadness</button>
+      <button class="emotion-btn" data-emotion="surprise">😲 Surprise</button>
+    </div>
+
+    <button class="btn-primary" id="next-btn" disabled>Submit &amp; continue</button>
+  </section>
+
+  <!-- ============ SCREEN 3: Done ============ -->
+  <section id="screen-done" class="card hidden">
+    <h2>🎉 Thank you!</h2>
+    <p>Your labels have been recorded. Here's a summary of what you submitted:</p>
+    <table class="summary-table">
+      <thead><tr><th>#</th><th>Tweet</th><th>Your label</th></tr></thead>
+      <tbody id="summary-body"></tbody>
+    </table>
+    <p style="margin-top: 18px; color: var(--muted); font-size: 0.85rem;">
+      Participant ID: <code id="done-participant-id"></code>
+    </p>
+  </section>
+
+  <footer class="note">
+    Built for CSE 594, Assignment 1-2 &middot; Dataset: dair-ai/emotion (Hugging Face)
+    &middot; <a href="admin.html">View collected data (admin)</a>
+  </footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
