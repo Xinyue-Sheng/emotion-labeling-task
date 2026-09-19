@@ -30,7 +30,7 @@ function pickEmotion(text) {
   const page = await browser.newPage({ viewport: { width: 900, height: 1000 } });
   const dir = process.env.SCREENSHOT_DIR;
 
-  await page.goto("http://localhost:3000/");
+  await page.goto("https://emotion-label-task.web.app/");
   await page.waitForSelector("#dataset-stats .stat-pill");
   await page.fill("#participant-name", "Xinyue Sheng");
   await page.screenshot({ path: `${dir}/01-welcome.png`, fullPage: true });
@@ -46,14 +46,33 @@ function pickEmotion(text) {
       await page.screenshot({ path: `${dir}/02-labeling.png`, fullPage: true });
     }
     await page.click("#next-btn");
-    await page.waitForTimeout(200);
+    // Wait for the Firestore write to resolve and the UI to actually move on
+    // (either the next tweet's text loads, or we reach the done screen) --
+    // a fixed short timeout isn't reliable over a real network round trip.
+    // Note: page.textContent() already returns the rendered text (including
+    // the quote marks the app wraps around it), so compare directly instead
+    // of re-wrapping it in another layer of quotes.
+    await page.waitForFunction(
+      (prevText) => {
+        const done = document.getElementById("screen-done");
+        if (done && !done.classList.contains("hidden")) return true;
+        const el = document.getElementById("tweet-text");
+        return el && el.textContent !== prevText;
+      },
+      tweetText,
+      { timeout: 15000 }
+    );
   }
 
   await page.waitForSelector("#screen-done:not(.hidden)");
   await page.screenshot({ path: `${dir}/03-done.png`, fullPage: true });
 
-  await page.goto("http://localhost:3000/admin.html");
-  await page.waitForSelector("#rows tr");
+  await page.goto("https://emotion-label-task.web.app/admin.html");
+  await page.waitForFunction(
+    () => !document.getElementById("rows").textContent.includes("Loading"),
+    { timeout: 20000 }
+  );
+  await page.waitForTimeout(300);
   await page.screenshot({ path: `${dir}/04-admin-collected-data.png`, fullPage: true });
 
   await browser.close();

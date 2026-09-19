@@ -1,44 +1,83 @@
-(function () {
-  function escapeHtml(str) {
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
-  }
+import { db } from "./firebase-init.js";
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  async function load() {
-    const res = await fetch("/api/responses");
-    const data = await res.json();
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
 
-    const uniqueParticipants = new Set(data.map((r) => r.participantId));
-    const matches = data.filter((r) => r.label === r.groundTruthEmotion).length;
-    const accuracy = data.length ? ((matches / data.length) * 100).toFixed(1) : "0.0";
+function csvEscape(value) {
+  const s = String(value ?? "");
+  if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+  return s;
+}
 
-    document.getElementById("summary").innerHTML = `
-      <p>
-        <span class="stat-pill">${data.length} labels submitted</span>
-        <span class="stat-pill">${uniqueParticipants.size} participant(s)</span>
-        <span class="stat-pill">${accuracy}% match dataset ground truth</span>
-      </p>`;
+let currentData = [];
 
-    const rows = document.getElementById("rows");
-    rows.innerHTML = data
-      .slice()
-      .reverse()
-      .map(
-        (r, i) => `
+async function load() {
+  const rowsEl = document.getElementById("rows");
+  rowsEl.innerHTML = `<tr><td colspan="7">Loading…</td></tr>`;
+
+  const snap = await getDocs(query(collection(db, "responses"), orderBy("timestamp", "desc")));
+  currentData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+  const uniqueParticipants = new Set(currentData.map((r) => r.participantId));
+  const matches = currentData.filter((r) => r.label === r.groundTruthEmotion).length;
+  const accuracy = currentData.length ? ((matches / currentData.length) * 100).toFixed(1) : "0.0";
+
+  document.getElementById("summary").innerHTML = `
+    <p>
+      <span class="stat-pill">${currentData.length} labels submitted</span>
+      <span class="stat-pill">${uniqueParticipants.size} participant(s)</span>
+      <span class="stat-pill">${accuracy}% match dataset ground truth</span>
+    </p>`;
+
+  rowsEl.innerHTML = currentData
+    .map(
+      (r, i) => `
       <tr>
-        <td>${data.length - i}</td>
+        <td>${currentData.length - i}</td>
         <td>${escapeHtml(r.participantName)}</td>
-        <td><code style="font-size:0.75rem;">${r.participantId.slice(0, 8)}…</code></td>
+        <td><code style="font-size:0.75rem;">${(r.participantId || "").slice(0, 8)}…</code></td>
         <td>${escapeHtml(r.tweetText)}</td>
         <td><span class="tag" data-emotion="${r.label}">${r.label}</span></td>
         <td><span class="tag" data-emotion="${r.groundTruthEmotion}">${r.groundTruthEmotion}</span></td>
-        <td>${new Date(r.timestamp).toLocaleString()}</td>
+        <td>${r.timestamp && r.timestamp.toDate ? r.timestamp.toDate().toLocaleString() : ""}</td>
       </tr>`
-      )
-      .join("");
-  }
+    )
+    .join("");
+}
 
-  document.getElementById("refresh-btn").addEventListener("click", load);
-  load();
-})();
+function downloadCsv() {
+  const cols = [
+    "participantId",
+    "participantName",
+    "tweetId",
+    "tweetText",
+    "label",
+    "groundTruthEmotion",
+    "timestamp",
+  ];
+  const lines = [cols.join(",")];
+  for (const r of currentData) {
+    const row = { ...r, timestamp: r.timestamp && r.timestamp.toDate ? r.timestamp.toDate().toISOString() : "" };
+    lines.push(cols.map((c) => csvEscape(row[c])).join(","));
+  }
+  const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "responses.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("refresh-btn").addEventListener("click", load);
+document.getElementById("csv-btn").addEventListener("click", downloadCsv);
+load();

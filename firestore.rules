@@ -1,0 +1,27 @@
+rules_version = '2';
+
+// This is a class assignment with no user accounts, so there is no auth to
+// gate on. Reads are left open so the admin page can list everyone's
+// submissions; writes are restricted to well-formed label submissions and
+// can never be edited or deleted once created.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /responses/{responseId} {
+      allow read: if true;
+
+      allow create: if request.resource.data.keys().hasAll(
+                        ['participantId', 'participantName', 'tweetId', 'tweetText', 'label', 'groundTruthEmotion', 'timestamp']
+                      )
+                    && request.resource.data.participantId is string
+                    && request.resource.data.participantName is string
+                    && request.resource.data.tweetId is int
+                    && request.resource.data.tweetText is string
+                    && request.resource.data.label in
+                         ['anger', 'fear', 'joy', 'love', 'sadness', 'surprise']
+                    && request.resource.data.groundTruthEmotion in
+                         ['anger', 'fear', 'joy', 'love', 'sadness', 'surprise'];
+
+      allow update, delete: if false;
+    }
+  }
+}
