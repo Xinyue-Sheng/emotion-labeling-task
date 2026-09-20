@@ -22,20 +22,17 @@ let currentData = [];
 
 async function load() {
   const rowsEl = document.getElementById("rows");
-  rowsEl.innerHTML = `<tr><td colspan="7">Loading…</td></tr>`;
+  rowsEl.innerHTML = `<tr><td colspan="6">Loading…</td></tr>`;
 
   const snap = await getDocs(query(collection(db, "responses"), orderBy("timestamp", "desc")));
   currentData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
   const uniqueParticipants = new Set(currentData.map((r) => r.participantId));
-  const matches = currentData.filter((r) => r.label === r.groundTruthEmotion).length;
-  const accuracy = currentData.length ? ((matches / currentData.length) * 100).toFixed(1) : "0.0";
 
   document.getElementById("summary").innerHTML = `
     <p>
       <span class="stat-pill">${currentData.length} labels submitted</span>
       <span class="stat-pill">${uniqueParticipants.size} participant(s)</span>
-      <span class="stat-pill">${accuracy}% match dataset ground truth</span>
     </p>`;
 
   rowsEl.innerHTML = currentData
@@ -47,7 +44,6 @@ async function load() {
         <td><code style="font-size:0.75rem;">${(r.participantId || "").slice(0, 8)}…</code></td>
         <td>${escapeHtml(r.tweetText)}</td>
         <td><span class="tag" data-emotion="${r.label}">${r.label}</span></td>
-        <td><span class="tag" data-emotion="${r.groundTruthEmotion}">${r.groundTruthEmotion}</span></td>
         <td>${r.timestamp && r.timestamp.toDate ? r.timestamp.toDate().toLocaleString() : ""}</td>
       </tr>`
     )
