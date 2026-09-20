@@ -5,6 +5,13 @@
   },
   "hosting": {
     "public": "public",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "headers": [
+      {
+        "comment": "Firebase serves non-HTML assets with max-age=3600 by default, which can leave a visitor running a cached admin.js/app.js against freshly deployed HTML. These files are small, so revalidate them on every load (cheap 304s via ETag) instead.",
+        "source": "**/*.@(js|css)",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      }
+    ]
   }
 }
