@@ -4,6 +4,19 @@ LABELS = ["sadness", "joy", "love", "anger", "fear", "surprise"]
 TARGET_PER_LABEL = 20  # 20 * 6 = 120 tweets pool
 OUT = "data/tweets.json"
 
+# The raw dataset is scraped Twitter text, so a small fraction contains
+# explicit/crude language. This is a light filter (not a full profanity
+# list) meant only to skip the most explicit hits, since this sample gets
+# shown to student participants as part of a class assignment demo.
+BLOCKLIST = [
+    "horny", "porn", "nude", "naked", "slut", "whore", "cunt", "dick",
+    "pussy", "cock", "rape", " sex ", "sexy", "molest", "fuck",
+]
+
+def is_clean(text):
+    lower = f" {text.lower()} "
+    return not any(b in lower for b in BLOCKLIST)
+
 buckets = {l: [] for l in LABELS}
 offset = 0
 length = 100
@@ -23,7 +36,7 @@ while not enough() and offset < 16000:
         text = r["row"]["text"].strip()
         label_idx = r["row"]["label"]
         label = LABELS[label_idx]
-        if text in seen_texts:
+        if text in seen_texts or not is_clean(text):
             continue
         if len(buckets[label]) < TARGET_PER_LABEL:
             buckets[label].append(text)

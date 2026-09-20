@@ -3,8 +3,12 @@
   --card: #ffffff;
   --ink: #1f2430;
   --muted: #6b7280;
-  --accent: #4f46e5;
-  --accent-ink: #ffffff;
+  /* University of Michigan colors: Michigan Blue + Maize */
+  --um-blue: #00274c;
+  --um-blue-dark: #001a33;
+  --um-maize: #ffcb05;
+  --accent: var(--um-blue);
+  --accent-ink: var(--um-maize);
   --border: #e5e7eb;
   --anger: #ef4444;
   --fear: #7c3aed;
@@ -24,10 +28,35 @@ body {
   line-height: 1.5;
 }
 
+.um-banner {
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--um-blue) 0 50%, var(--um-maize) 50% 100%);
+}
+
 .wrap {
   max-width: 720px;
   margin: 0 auto;
   padding: 40px 20px 80px;
+}
+
+.um-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--um-blue);
+  color: var(--um-maize);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.um-badge .block-m {
+  font-weight: 800;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 header.page-header {
@@ -128,7 +157,7 @@ button {
 
 .progress-bar-fill {
   height: 100%;
-  background: var(--accent);
+  background: var(--um-maize);
   transition: width 0.25s ease;
 }
 
@@ -230,8 +259,8 @@ footer.note {
 
 .stat-pill {
   display: inline-block;
-  background: #eef2ff;
-  color: var(--accent);
+  background: #fff6d9;
+  color: var(--um-blue);
   border-radius: 999px;
   padding: 4px 12px;
   font-size: 0.82rem;
